@@ -1,5 +1,31 @@
 {% extends "network/layout.html" %}
 
 {% block body %}
-    TODO
+    <h2>Create a post</h2>
+    <div class="jumbotron home-jumbotron">
+        <h4>New post</h4>
+        <form action="#">
+            <div class="form-group">
+                <label for="post" style="font-weight: bold;">What's on your mind?</label>
+                <textarea class="form-control" rows="5" id="post" name="text"></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary">Post</button>
+        </form>
+    </div>
+
+    <h2>All posts</h2>
+    <div class="jumbotron home-jumbotron">
+        <a title="My profile" href="#">
+            <i class="material-icons" style="font-size: 35px;">person</i>
+            <span>{{ user.username }}</span>
+        </a>
+
+        <!-- <form action="#">
+            <div class="form-group">
+                <label for="post" style="font-weight: bold;">What's on your mind?</label>
+                <textarea class="form-control" rows="5" id="post" name="text"></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary">Post</button>
+        </form> -->
+    </div>
 {% endblock %}

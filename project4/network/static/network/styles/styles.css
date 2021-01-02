@@ -1,0 +1,10 @@
+h2 {
+    padding-left: 25px;
+}
+
+.home-jumbotron {
+    padding: 2rem;
+    margin: 0px 25px 25px 25px;
+    background: white;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+}

@@ -1,0 +1,12 @@
+.posts, .following, .login, .settings, .logout, .register {
+    display: inline-block;
+    margin: 5px;
+}
+
+.posts, .following {
+    float: left;
+}
+
+.login, .settings, .logout, .register {
+    float: right;
+}
