@@ -1,0 +1,14 @@
+User:
+    Name
+
+Post:
+    poster (username)
+    content 
+    timestamp
+    number of likes (default=0)
+
+Followers:
+    user
+
+Following:
+    user
