@@ -4,14 +4,44 @@
 <html lang="en">
     <head>
         <title>{% block title %}Social Network{% endblock %}</title>
+
+        <link href="{% static 'network/logo/favicon.ico' %}" rel="icon">
+
+        <!-- <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+        <link rel="manifest" href="/site.webmanifest"> -->
+
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-        <link href="{% static 'network/styles.css' %}" rel="stylesheet">
+
+        <link href="{% static 'network/styles/styles.css' %}" rel="stylesheet">
+        <link href="{% static 'network/styles/logo.css' %}" rel="stylesheet">
     </head>
     <body>
 
+        <div class="jumbotron" style="padding: 0.25rem; margin-bottom: 0px">
+            <div class="logo-container">
+                <a title="Home" class="logo" href="{% url 'index' %}">
+                    <div class="logo-image-container">
+                        <img class="logo-image" src="{% static 'network/logo/favicon.ico' %}">
+                    </div>
+    
+                    <div class="brand-name">
+                        Network
+                    </div>
+                </a>
+            </div>
+            <div class="user">
+
+                <a title="My profile" class="profile" href="#">
+                    <i class="material-icons" style="font-size: 35px;">person</i>
+                </a>
+            </div>
+        </div>
+
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <a class="navbar-brand" href="#">Network</a>
-          
             <div>
               <ul class="navbar-nav mr-auto">
                 {% if user.is_authenticated %}
