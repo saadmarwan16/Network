@@ -12,7 +12,7 @@ from .serializers import PostSerializer, LikeSerializer, CommentSerializer
 
 def index(request):
     return render(request, "network/index.html", {
-        "posts": Post.objects.all()
+        "posts": Post.objects.order_by("-timestamp").all()
     })
 
 
@@ -44,8 +44,9 @@ def like(request):
             like.save()
             return JsonResponse({"status": "Successful."}, status=201)
         except Like.DoesNotExist:
-            like = Like(is_liked=data["is_liked"], post=post, user=request.user)
+            like = Like(is_liked=data["is_liked"], post=post)
             like.save()
+            like.user.add(request.user)
             return JsonResponse({"status": "Successful."}, status=201)
 
 

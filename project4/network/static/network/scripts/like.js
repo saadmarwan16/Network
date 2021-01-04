@@ -1,7 +1,5 @@
 function isLiked(post) {
-    const likeStatus = document.querySelector('.likes');
-
-    statusContainer = document.querySelector('.like-status');
+    const statusContainer = document.querySelector(`#like${post.id}`);
 
     const unLikeLink = document.createElement('a');
     unLikeLink.className = 'unlike-link';
@@ -25,18 +23,13 @@ function isLiked(post) {
         unLike.innerText = 'favorite_border';
         unLikeLink.append(unLike);
         statusContainer.append(unLikeLink);
-        likeStatus.append((statusContainer));
 
         // Creat a like icon and add it to the DOM
         const like = document.createElement('i');
         like.className = 'material-icons liked';
         like.innerText = 'favorite';
-        // likeContainer.append(like);
         likeLink.append(like);
         statusContainer.append(likeLink);
-        likeStatus.append(statusContainer);
-
-        console.log(result.liked);
 
         // Give user and unlike option if the user already liked this post
         if (result.liked) {
@@ -53,7 +46,7 @@ function isLiked(post) {
     })
 
     // User clicks on the like status container to like or dislike a post
-    likeStatus.addEventListener('click', event => {
+    statusContainer.addEventListener('click', event => {
         
         // If the user clicked on the already liked post dislike it, otherwise like it
         if (event.target.className === 'material-icons liked') {
@@ -74,12 +67,13 @@ function isLiked(post) {
             .then(result => {
                 
                 // Update the number of likes on the client side
-                console.log(document.querySelector('.num-of-likes'));
-                let numOfLikes = document.querySelector('.num-of-likes').innerText;
+                let numOfLikes = document.querySelector(`#num-like${post.id}`).innerText;
+                console.log(numOfLikes)
                 numOfLikes--;
-                document.querySelector('.num-of-likes').innerText = numOfLikes;
+                console.log(numOfLikes)
+                document.querySelector(`#num-like${post.id}`).innerText = numOfLikes;
             })
-        } else {
+        } else if (event.target.className === 'material-icons unliked') {
 
             // Show the unlike icon and hide the like icon
             unLikeLink.style.display = 'none';
@@ -97,10 +91,11 @@ function isLiked(post) {
             .then(result => {
 
                 // Update the number of likes on the client side
-                console.log(document.querySelector('.num-of-likes'));
-                let numOfLikes = document.querySelector('.num-of-likes').innerText;
+                let numOfLikes = document.querySelector(`#num-like${post.id}`).innerText;
+                console.log(numOfLikes)
                 numOfLikes++;
-                document.querySelector('.num-of-likes').innerText = numOfLikes;
+                console.log(numOfLikes)
+                document.querySelector(`#num-like${post.id}`).innerText = numOfLikes;
             })
         }
     })
@@ -120,10 +115,7 @@ function likeCount(post) {
     .then(response => response.json())
     .then(result => {
 
-        // Create a span for the number of likes and add it to the DOM
-        // const numberOfLikes = document.createElement('span');
-        // numberOfLikes.className = 'number-of-likes';
-        document.querySelector('.num-of-likes').innerText = result.num_of_likes;
-        // document.querySelector('.likes').append(numberOfLikes);
+        // Set the number of likes on the client side
+        document.querySelector(`#num-like${post.id}`).innerText = result.num_of_likes;
     })
 }
