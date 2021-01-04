@@ -1,0 +1,31 @@
+{% extends "network/layout.html" %}
+
+{% block body %}
+    <h2>All posts</h2>
+    {% for post in posts %}
+        <div class="jumbotron all-posts-jumbotron" id="{{ post.id }}">
+            <a title="My profile" href="#" class="poster-container">
+                <i class="material-icons poster-image">person</i>
+                <span class="poster">Posted by {{ post.poster }}</span>
+            </a>
+
+            <div class="edit-timestamp">
+                <span style="margin-right: 5px;"><a href="#">Edit</a></span>
+                <span>{{ post.timestamp }}</span>
+            </div>
+
+            <div class="jumbotron content">{{ post.content }}</div>
+
+            <div class="likes-comments">
+                <span class="likes">
+                    <span class="like-status" id="like{{ post.id }}"></span>
+                    <span class="num-of-likes" id="num-like{{ post.id }}"></span>
+                </span>
+                <span class="comments">
+                    <a href="#"><i class="material-icons comment">comment</i></a>
+                    <span>{{ post.num_of_comments }}</span>
+                </span>
+            </div>
+        </div>
+    {% endfor %}
+{% endblock %}

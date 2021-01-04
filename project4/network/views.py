@@ -16,6 +16,22 @@ def index(request):
     })
 
 
+def new_post(request):
+    content = request.POST["content"]
+    post = Post(content=content, poster=request.user)
+    post.save()
+
+    return HttpResponseRedirect(reverse('index'))
+
+
+def profile(request, poster_id):
+    # poster = User.objects.get(pk=poster_id)
+    # print(poster)
+    return render(request, "network/profile.html", {
+        "posts": Post.objects.filter(poster_id=poster_id)
+    })
+
+
 @csrf_exempt
 def like(request):
     if request.method == 'POST':

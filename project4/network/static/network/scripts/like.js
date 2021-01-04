@@ -20,6 +20,7 @@ function isLiked(post) {
         // Create an unlike icon and add it to the DOM
         const unLike = document.createElement('i');
         unLike.className = 'material-icons unliked';
+        unLike.title = 'Like';
         unLike.innerText = 'favorite_border';
         unLikeLink.append(unLike);
         statusContainer.append(unLikeLink);
@@ -27,6 +28,7 @@ function isLiked(post) {
         // Creat a like icon and add it to the DOM
         const like = document.createElement('i');
         like.className = 'material-icons liked';
+        like.title = 'Unlike';
         like.innerText = 'favorite';
         likeLink.append(like);
         statusContainer.append(likeLink);
