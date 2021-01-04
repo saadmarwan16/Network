@@ -37,8 +37,9 @@ def like(request):
     if request.method == 'POST':
         data = JSONParser().parse(request)
         post = Post.objects.get(pk=data["post_id"])
+        print(post)
         try:
-            likes = Like.objects.get(post=post, user=request.user)
+            likes = Like.objects.get(post=post)
             return JsonResponse({"liked": likes.is_liked})
         except Like.DoesNotExist:
             return JsonResponse({"liked": False})

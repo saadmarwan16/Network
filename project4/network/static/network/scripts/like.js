@@ -1,11 +1,11 @@
 function isLiked(post) {
     const statusContainer = document.querySelector(`#like${post.id}`);
 
-    const unLikeLink = document.createElement('a');
-    unLikeLink.className = 'unlike-link';
+    // const unLikeLink = document.createElement('a');
+    // unLikeLink.className = 'unlike-link';
 
-    const likeLink = document.createElement('a');
-    likeLink.className = 'like-link';
+    // const likeLink = document.createElement('a');
+    // likeLink.className = 'like-link';
 
     // Send a POST request to know whether user has liked this post
     fetch('/like', {
@@ -18,32 +18,36 @@ function isLiked(post) {
     .then(result => {
 
         // Create an unlike icon and add it to the DOM
-        const unLike = document.createElement('i');
-        unLike.className = 'material-icons unliked';
-        unLike.title = 'Like';
-        unLike.innerText = 'favorite_border';
-        unLikeLink.append(unLike);
-        statusContainer.append(unLikeLink);
+        // const unLike = document.createElement('i');
+        // unLike.className = 'material-icons unliked';
+        // unLike.title = 'Like';
+        // unLike.innerText = 'favorite_border';
+        // unLikeLink.append(unLike);
+        // statusContainer.append(unLikeLink);
 
         // Creat a like icon and add it to the DOM
-        const like = document.createElement('i');
-        like.className = 'material-icons liked';
-        like.title = 'Unlike';
-        like.innerText = 'favorite';
-        likeLink.append(like);
-        statusContainer.append(likeLink);
+        // const like = document.createElement('i');
+        // like.className = 'material-icons liked';
+        // like.title = 'Unlike';
+        // like.innerText = 'favorite';
+        // likeLink.append(like);
+        // statusContainer.append(likeLink);
+
+        console.log(result);
 
         // Give user and unlike option if the user already liked this post
         if (result.liked) {
 
             // Show the unlike icon and hide the like icon
-            unLikeLink.style.display = 'none';
-            likeLink.style.display = 'block';
+            document.querySelector(`#unlike-icon${post.id}`).style.display = 'none';
+            document.querySelector(`#like-icon${post.id}`).style.display = 'block';
+            // likeLink.style.display = 'block';
         } else {
 
             // Show the like icon and hide the unlike icon
-            likeLink.style.display = 'none';
-            unLikeLink.style.display = 'block';
+            // likeLink.style.display = 'none';
+            document.querySelector(`#like-icon${post.id}`).style.display = 'none';
+            document.querySelector(`#unlike-icon${post.id}`).style.display = 'block';
         }
     })
 
