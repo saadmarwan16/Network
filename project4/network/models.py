@@ -3,15 +3,54 @@ from django.db import models
 
 
 class User(AbstractUser):
+    profile_picture = models.ImageField(upload_to="profile-picture/", blank=True, null=True)
+
     def __str__(self):
         return f"{self.username}"
 
 
 class Post(models.Model):
-    content = models.TextField()
+    content = models.CharField(max_length=2560)
     timestamp = models.DateTimeField(auto_now_add=True)
-    likes = models.PositiveIntegerField(default=0)
+    num_of_likes = models.PositiveIntegerField(default=0)
+    num_of_comments = models.PositiveIntegerField(default=0)
     poster = models.ForeignKey(User, on_delete=models.CASCADE, related_name="posts")
+
+    def __str__(self):
+        return f"{self.content}"
+
+    def increase_likes(self):
+        self.num_of_likes += 1
+        self.save()
+
+    def decrease_likes(self):
+        self.num_of_likes -= 1
+        self.save()
+
+
+class Like(models.Model):
+    is_liked = models.BooleanField()
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="number_of_likes")
+    user = models.ManyToManyField(User, related_name="liked")
+
+    @staticmethod
+    def is_user_liked(self, post, user):
+        return Like.objects.filter(post=post, user=user).count() == 1 and self.is_liked == True
+
+    def __str__(self):
+        if self.is_liked:
+            return f"{self.user} liked {self.post}"
+
+        else:
+            return f"{self.user} didn't like {self.post}"
+
+
+
+class Comment(models.Model):
+    content = models.CharField(max_length=512)
+    timestamp = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="commented")
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="number_of_comments")
 
     def __str__(self):
         return f"{self.content}"

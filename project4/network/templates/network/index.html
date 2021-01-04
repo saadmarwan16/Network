@@ -1,8 +1,15 @@
 {% extends "network/layout.html" %}
 
+{% load static %}
+
+{% block scripts %}
+    <script src="{% static 'network/scripts/like.js' %}"></script>
+    <script src="{% static 'network/scripts/main.js' %}"></script>
+{% endblock %}
+
 {% block body %}
     <h2>Create a post</h2>
-    <div class="jumbotron home-jumbotron">
+    <div class="jumbotron new-post-jumbotron">
         <h4>New post</h4>
         <form action="#">
             <div class="form-group">
@@ -14,37 +21,41 @@
     </div>
 
     <h2>All posts</h2>
-    <div class="jumbotron home-jumbotron">
-        <a title="My profile" href="#" class="poster-container">
-            <i class="material-icons poster-image">person</i>
-            <span style="font-size: 20px;">poster's username</span>
-        </a>
+    {% for post in posts %}
+        <div class="jumbotron all-posts-jumbotron" id="{{ post.id }}">
+            <a title="My profile" href="#" class="poster-container">
+                <i class="material-icons poster-image">person</i>
+                <span class="poster">Posted by {{ post.poster }}</span>
+            </a>
 
-        <div class="edit-timestamp">
-            <span style="margin-right: 5px;"><a href="#">Edit</a></span>
-            <span>Timestamp</span>
+            <div class="edit-timestamp">
+                <span style="margin-right: 5px;"><a href="#">Edit</a></span>
+                <span>{{ post.timestamp }}</span>
+            </div>
+
+            <div class="jumbotron content">{{ post.content }}</div>
+
+            <div class="likes-comments">
+                <span class="likes">
+                    <span class="like-status">
+                        <!-- <a class=""><i class="material-icons liked">favorite</i></a>
+                        <a href="#"><i class="material-icons unliked">favorite_border</i></a> -->
+                    </span>
+                    <span class="num-of-likes"></span>
+                </span>
+                <span class="comments">
+                    <a href="#"><i class="material-icons comment">comment</i></a>
+                    <span>{{ post.num_of_comments }}</span>
+                </span>
+            </div>
+
+            <!-- <form action="#">
+                <div class="form-group">
+                    <label for="post" style="font-weight: bold;">What's on your mind?</label>
+                    <textarea class="form-control" rows="5" id="post" name="text"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Post</button>
+            </form> -->
         </div>
-
-        <div class="jumbotron content">This is the content</div>
-
-        <div class="likes-comments">
-            <span class="likes">
-                <a href="#"><i class="material-icons liked">favorite</i></a>
-                <a href="#"><i class="material-icons unliked">favorite_border</i></a>
-                <span>33</span>
-            </span>
-            <span class="comments">
-                <a href="#"><i class="material-icons comment">comment</i></a>
-                <span>14</span>
-            </span>
-        </div>
-
-        <!-- <form action="#">
-            <div class="form-group">
-                <label for="post" style="font-weight: bold;">What's on your mind?</label>
-                <textarea class="form-control" rows="5" id="post" name="text"></textarea>
-              </div>
-              <button type="submit" class="btn btn-primary">Post</button>
-        </form> -->
-    </div>
+    {% endfor %}
 {% endblock %}

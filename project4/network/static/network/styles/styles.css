@@ -2,7 +2,7 @@ h2 {
     padding-left: 25px;
 }
 
-.home-jumbotron {
+.new-post-jumbotron, .all-posts-jumbotron {
     padding: 2rem;
     margin: 0px 25px 25px 25px;
     background: white;
@@ -27,6 +27,12 @@ h2 {
     margin-right: 10px;
 }
 
+.poster {
+    font-size: 20px;
+    display: inline-flex;
+    align-items: center;
+}
+
 .edit-timestamp {
     padding-left: 10px;
     margin-bottom: 10px;
@@ -46,6 +52,7 @@ h2 {
 .liked, .unliked, .comment {
     color: #007bff;
     margin-right: 8px;
+    cursor: pointer;
 }
 
 .likes, .comments {
@@ -54,4 +61,8 @@ h2 {
 
 .likes {
     margin-right: 25px;
+}
+
+.like-container, .unlike-container {
+    cursor: pointer;
 }
