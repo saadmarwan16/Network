@@ -8,3 +8,50 @@ h2 {
     background: white;
     border: 1px solid rgba(0, 0, 0, 0.2);
 }
+
+.poster-container {
+    display: inline-flex;
+    /* align-items: flex; */
+    padding: 5px;
+    height: 45px;
+    /* margin-bottom: 5px; */
+}
+
+.poster-container:hover {
+    border: 2px solid;
+    text-decoration: none;
+}
+
+.poster-image {
+    font-size: 35px;
+    margin-right: 10px;
+}
+
+.edit-timestamp {
+    padding-left: 10px;
+    margin-bottom: 10px;
+}
+
+.content {
+    padding: 10px;
+    margin-bottom: 1rem;
+}
+
+.likes-comments {
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+}
+
+.liked, .unliked, .comment {
+    color: #007bff;
+    margin-right: 8px;
+}
+
+.likes, .comments {
+    display: inline-flex;
+}
+
+.likes {
+    margin-right: 25px;
+}

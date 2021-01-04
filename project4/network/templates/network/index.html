@@ -7,7 +7,7 @@
         <form action="#">
             <div class="form-group">
                 <label for="post" style="font-weight: bold;">What's on your mind?</label>
-                <textarea class="form-control" rows="5" id="post" name="text"></textarea>
+                <textarea class="form-control" rows="3" id="post" name="text"></textarea>
               </div>
               <button type="submit" class="btn btn-primary">Post</button>
         </form>
@@ -15,10 +15,29 @@
 
     <h2>All posts</h2>
     <div class="jumbotron home-jumbotron">
-        <a title="My profile" href="#">
-            <i class="material-icons" style="font-size: 35px;">person</i>
-            <span>{{ user.username }}</span>
+        <a title="My profile" href="#" class="poster-container">
+            <i class="material-icons poster-image">person</i>
+            <span style="font-size: 20px;">poster's username</span>
         </a>
+
+        <div class="edit-timestamp">
+            <span style="margin-right: 5px;"><a href="#">Edit</a></span>
+            <span>Timestamp</span>
+        </div>
+
+        <div class="jumbotron content">This is the content</div>
+
+        <div class="likes-comments">
+            <span class="likes">
+                <a href="#"><i class="material-icons liked">favorite</i></a>
+                <a href="#"><i class="material-icons unliked">favorite_border</i></a>
+                <span>33</span>
+            </span>
+            <span class="comments">
+                <a href="#"><i class="material-icons comment">comment</i></a>
+                <span>14</span>
+            </span>
+        </div>
 
         <!-- <form action="#">
             <div class="form-group">
