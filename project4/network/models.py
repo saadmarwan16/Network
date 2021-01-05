@@ -8,6 +8,18 @@ class User(AbstractUser):
     def __str__(self):
         return f"{self.username}"
 
+    def is_password_valid(self):
+        """
+        Returns true password has at least one uppercase, at least one lower case, at least one digit and
+        is at least eight character long
+        """
+
+        return (any(c.isupper() for c in self.password) and any(c.islower() for c in self.password)
+            and any(c.isdigit() for c in self.password) and len(self.password) >= 8)
+
+    def do_passwords_match(self, confirmation):
+        return self.password == confirmation
+
 
 class Post(models.Model):
     content = models.CharField(max_length=2560)
@@ -32,10 +44,6 @@ class Like(models.Model):
     is_liked = models.BooleanField()
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="number_of_likes")
     user = models.ManyToManyField(User, related_name="liked")
-
-    @staticmethod
-    def is_user_liked(self, post, user):
-        return Like.objects.filter(post=post, user=user).count() == 1 and self.is_liked == True
 
     def __str__(self):
         if self.is_liked:

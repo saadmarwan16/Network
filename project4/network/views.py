@@ -1,6 +1,6 @@
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, Http404
 from rest_framework.parsers import JSONParser
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render
@@ -34,11 +34,16 @@ def new_post(request):
 
 def profile(request, poster_id):
     """
-    Load the profile of the user who is clicked on
+    Load the profile of the user whom the user tried to access if available
     """
 
+    try:
+        poster = User.objects.get(pk=poster_id)
+    except User.DoesNotExist:
+        raise Http404("This user does not exist")
+
     return render(request, "network/profile.html", {
-        "posts": Post.objects.filter(poster_id=poster_id)
+        "posts": Post.objects.filter(poster=poster)
     })
 
 
@@ -142,18 +147,27 @@ def register(request):
     if request.method == "POST":
         username = request.POST["username"]
         email = request.POST["email"]
-
-        # Ensure password matches confirmation
         password = request.POST["password"]
         confirmation = request.POST["confirmation"]
-        if password != confirmation:
+
+        user = User.objects.create_user(username, email, password)
+
+        # Ensure password is valid
+        if not user.is_password_valid():
+            return render(request, "network/register.html", {
+                "message": "Password must be at least 8 characters long, contain one uppercase, one lower case, one digit"
+            })
+
+        # Ensure password matches confirmation
+        elif not user.do_passwords_match:
             return render(request, "network/register.html", {
                 "message": "Passwords must match."
             })
+            
 
         # Attempt to create new user
         try:
-            user = User.objects.create_user(username, email, password)
+            # user = User.objects.create_user(username, email, password)
             user.save()
         except IntegrityError:
             return render(request, "network/register.html", {
