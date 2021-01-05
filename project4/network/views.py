@@ -11,12 +11,20 @@ from .serializers import PostSerializer, LikeSerializer, CommentSerializer
 
 
 def index(request):
+    """ 
+    Load the home page
+    """
+
     return render(request, "network/index.html", {
         "posts": Post.objects.order_by("-timestamp").all()
     })
 
 
 def new_post(request):
+    """
+    Create a new post and redirect the user to the home page
+    """
+
     content = request.POST["content"]
     post = Post(content=content, poster=request.user)
     post.save()
@@ -25,8 +33,10 @@ def new_post(request):
 
 
 def profile(request, poster_id):
-    # poster = User.objects.get(pk=poster_id)
-    # print(poster)
+    """
+    Load the profile of the user who is clicked on
+    """
+
     return render(request, "network/profile.html", {
         "posts": Post.objects.filter(poster_id=poster_id)
     })
@@ -34,41 +44,69 @@ def profile(request, poster_id):
 
 @csrf_exempt
 def like(request):
+    """
+    Allow users to like and unlike posts
+    """
+
+    # User loading the page
     if request.method == 'POST':
         data = JSONParser().parse(request)
         post = Post.objects.get(pk=data["post_id"])
-        print(post)
-        try:
-            likes = Like.objects.get(post=post)
-            return JsonResponse({"liked": likes.is_liked})
-        except Like.DoesNotExist:
+        
+        # Set users who haven't logged in like status to not liked
+        if str(request.user) == "AnonymousUser":
             return JsonResponse({"liked": False})
 
-    elif request.method == 'PUT':
-        data = JSONParser().parse(request)
-
-        if data["is_liked"]:
-            post = Post.objects.get(pk=data["post_id"])
-            post.increase_likes()
-
+        # Users who have logged in
         else:
-            post = Post.objects.get(pk=data["post_id"])
-            post.decrease_likes()
 
-        try:
-            like = Like.objects.get(post=post, user=request.user)
-            like.is_liked = data["is_liked"]
-            like.save()
-            return JsonResponse({"status": "Successful."}, status=201)
-        except Like.DoesNotExist:
-            like = Like(is_liked=data["is_liked"], post=post)
-            like.save()
-            like.user.add(request.user)
-            return JsonResponse({"status": "Successful."}, status=201)
+            # Return whether user have liked post or not
+            try:
+                likes = Like.objects.get(post=post, user=request.user)
+                return JsonResponse({"liked": likes.is_liked})
+
+            # If user have never liked or unliked a post set it to not liked
+            except Like.DoesNotExist:
+                return JsonResponse({"liked": False})
+
+    # User trying to toggle between like and dislike
+    elif request.method == 'PUT':
+        
+        # User haven't logged in
+        if str(request.user) == "AnonymousUser":
+            return JsonResponse({"status": "Anonymous User"}, status=201)
+
+        # User have logged in
+        else:
+            data = JSONParser().parse(request)
+            post = Post.objects.get(pk=data["post_id"])
+
+            if data["is_liked"]:
+                post.increase_likes()
+            else:
+                post.decrease_likes()
+
+            # Attempt to toggle between like and unlike of a post
+            try:
+                like = Like.objects.get(post=post, user=request.user)
+                like.is_liked = data["is_liked"]
+                like.save()
+
+            # User have never like or unliked post
+            except Like.DoesNotExist:
+                like = Like(is_liked=data["is_liked"], post=post)
+                like.save()
+                like.user.add(request.user)
+
+            return JsonResponse({"status": "Successful"}, status=201)
 
 
 @csrf_exempt
 def like_count(request):
+    """
+    Get the number of likes a post have
+    """
+
     data = JSONParser().parse(request)
     post = Post.objects.get(pk=data["post_id"])
     serializer = PostSerializer(post, many=False)

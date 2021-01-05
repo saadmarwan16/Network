@@ -66,3 +66,12 @@ h2 {
 .like-container, .unlike-container {
     cursor: pointer;
 }
+
+.no-like {
+    display: none;
+    position: relative;
+    top: 25px;
+    right: 9rem;
+    background: rgba(255, 0, 0, 0.3);
+    color: red;
+}
