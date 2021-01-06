@@ -34,15 +34,17 @@
                 </a>
             </div>
             <div class="user">
-                <a title="My profile" class="profile" href="#">
-                    <i class="material-icons" style="font-size: 35px;">person</i>
-
-                    {% if user.is_authenticated %}
+                {% if user.is_authenticated %}
+                    <a title="My profile" class="profile" href="{% url 'user_profile' %}">
+                        <i class="material-icons" style="font-size: 35px;">person</i>
                         <span>Signed in as {{ user.username }}</span>
-                    {% else %}
+                    </a>
+                {% else %}
+                    <a title="Login" class="profile" href="{% url 'user_profile' %}">
+                        <i class="material-icons" style="font-size: 35px;">person</i>
                         <span>Not signed in</span>
-                    {% endif %}
-                </a>
+                    </a>
+                {% endif %}
             </div>
         </div>
 

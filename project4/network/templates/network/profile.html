@@ -7,52 +7,150 @@
     <link href="{% static 'network/styles/profile.css' %}" rel="stylesheet">
 {% endblock %}
 
+{% block scripts %}
+    <script src="{% static 'network/scripts/profile.js' %}"></script>
+    <script src="{% static 'network/scripts/like.js' %}"></script>
+    <script src="{% static 'network/scripts/main.js' %}"></script>
+{% endblock %}
+
 {% block body %}
     <div class="container-fluid">
         <div class="row user-profile">
-            <img style="width: 100%; height: 40vh" src="{% static 'network/images/default-cover-photo.jpg' %}">
+            <img class="cover-picture" src="{% static 'network/images/default-cover-photo.jpg' %}">
+            <!-- <div>
+                <img class="profile-picture" src="{% static 'network/images/default-profile-picture.jpg' %}">
+            </div> -->
         </div>
-        <div class="row single-profile-row">
-            <div class="col-3 single-profile">
-                <div class="jumbotron single-profile-jumb">Profile</div>
+
+        {% if poster.id == user.id %}
+            <div class="row single-profile-row">
+                <div class="col-2 posts">
+                    <div class="jumbotron posts-jumb" id="single-posts">Posts</div>
+                </div>
+                <div class="col-2 single-profile">
+                    <div class="jumbotron single-profile-jumb" id="single-profile">Profile</div>
+                </div>
+                <div class="col-4 followers">
+                    <div class="jumbotron followers-jumb" id="single-followers">Followers</div>
+                </div>
+                <div class="col-4 following">
+                    <div class="jumbotron following-jumb" id="single-following">Following</div>
+                </div>
             </div>
-            <div class="col-3 followers">
-                <div class="jumbotron followers-jumb">Followers</div>
+        {% else %}
+            <div class="row single-profile-row">
+                <div class="col-2 posts">
+                    <div class="jumbotron posts-jumb" id="single-posts">Posts</div>
+                </div>
+                <div class="col-5 followers">
+                    <div class="jumbotron followers-jumb" id="single-followers">Followers</div>
+                </div>
+                <div class="col-5 following">
+                    <div class="jumbotron following-jumb" id="single-following">Following</div>
+                </div>
             </div>
-            <div class="col-3 following">
-                <div class="jumbotron following-jumb">Following</div>
-            </div>
-            <div class="col-3 posts">
-                <div class="jumbotron posts-jumb">Posts</div>
-            </div>
-        </div>
+        {% endif %}
     </div>
 
-    <h2>Posts</h2>
-    {% for post in posts %}
-        <div class="jumbotron all-posts-jumbotron" id="{{ post.id }}">
-            <a title="My profile" href="#" class="poster-container">
-                <i class="material-icons poster-image">person</i>
-                <span class="poster">Posted by {{ post.poster }}</span>
-            </a>
+    <div id="posts-view">
+        {% if poster.id == user.id %}
+            <p>You have {{ posts_count }} posts</p>
+        {% else %}
+            <p>This user have {{ posts_count }} posts</p>
+        {% endif %}
 
-            <div class="edit-timestamp">
-                <span style="margin-right: 5px;"><a href="#">Edit</a></span>
-                <span>{{ post.timestamp }}</span>
+        <h3 style="padding: 15px;">Posts</h3>
+
+        {% for post in posts %}
+            <div class="jumbotron all-posts-jumbotron" id="{{ post.id }}">
+                <a title="My profile" href="#" class="poster-container">
+                    <i class="material-icons poster-image">person</i>
+                    <span class="poster">Posted by {{ post.poster }}</span>
+                </a>
+
+                <div class="edit-timestamp">
+                    {% if user == post.poster %}
+                        <span style="margin-right: 5px;"><a href="#">Edit</a></span>
+                    {% endif %}
+                    <span>{{ post.timestamp }}</span>
+                </div>
+
+                <div class="jumbotron content">{{ post.content }}</div>
+
+                <div class="likes-comments">
+                    <span class="likes">
+                        <span class="likes">
+                            <span class="like-status" id="like{{ post.id }}">
+                                <a class="unlike-link" id="unlike-icon{{ post.id }}">
+                                    <i class="material-icons unliked" title="Like">favorite_border</i>
+                                </a>
+                                <a class="like-link" id="like-icon{{ post.id }}">
+                                    <i class="material-icons liked" title="Unlike">favorite</i>
+                                </a>
+                            </span>
+                            <span class="num-of-likes" id="num-like{{ post.id }}"></span>
+                        </span>
+                        <!-- <span class="like-status" id="like{{ post.id }}"></span> -->
+                        <!-- <span class="num-of-likes" id="num-like{{ post.id }}"></span> -->
+                    </span>
+                    <span class="comments">
+                        <a href="#"><i class="material-icons comment">comment</i></a>
+                        <span>{{ post.num_of_comments }}</span>
+                    </span>
+                </div>
             </div>
+        {% endfor %}
+    </div>
 
-            <div class="jumbotron content">{{ post.content }}</div>
+    <div class="container-fluid">
+        <div class="row" id="profile-view">
+            <div class="col-12">
+                <h3>Change Password</h3>
+                <p style="margin-bottom: 25px;"><strong>You can change your password but first enter your old passowrd</strong></p>
 
-            <div class="likes-comments">
-                <span class="likes">
-                    <span class="like-status" id="like{{ post.id }}"></span>
-                    <span class="num-of-likes" id="num-like{{ post.id }}"></span>
-                </span>
-                <span class="comments">
-                    <a href="#"><i class="material-icons comment">comment</i></a>
-                    <span>{{ post.num_of_comments }}</span>
-                </span>
+                <form method="post">
+                    {% csrf_token %}
+
+                    <div class="form-group">
+                        <label for="prev-pwd">Previous password:</label>
+                        <input type="text" class="form-control" id="prev-pwd" placeholder="Enter previous password" name="prev-pwd">
+                    </div>
+                    <div class="form-group">
+                        <label for="new-pwd">New password:</label>
+                        <input type="password" class="form-control" id="new-pwd" placeholder="Enter password" name="new-pwd">
+                    </div>
+                    <div class="form-group">
+                        <label for="confirm-pwd">Enter new password:</label>
+                        <input type="password" class="form-control" id="confirm-pwd" placeholder="Enter password again" name="confirm-pwd">
+                    </div>
+                    <button id="change-pwd-btn" type="submit" class="btn btn-primary">Submit</button>
+                </form>
             </div>
         </div>
-    {% endfor %}
+
+        <div class="row" id="followers-view">
+            {% if poster.id == user.id %}
+                <div class="follow">You have {{ followers_count }} followers</div>
+            {% else %}
+                <div class="follow">
+                    <span style="margin-right: 25px">This user have {{ followers_count }} followers</span>
+                    <button class="btn btn-primary btn-primary-sm">Follow +</button>
+                </div>
+            {% endif %}
+        </div>
+        <div class="row" id="following-view">
+            {% if poster.id == user.id %}
+                <div class="follow">You have {{ followee_count }} following</div>
+            {% else %}
+                <div class="follow">
+                    <span style="margin-right: 25px">This user have {{ followee_count }} following</span>
+                    <button class="btn btn-primary btn-primary-sm">Follow +</button>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="row jumbotron" id="successful-view">
+            <span class="password-changed">Password successfully changed</span>
+        </div>
+    </div>
 {% endblock %}

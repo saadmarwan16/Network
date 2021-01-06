@@ -43,10 +43,90 @@ def profile(request, poster_id):
         raise Http404("This user does not exist")
 
     return render(request, "network/profile.html", {
-        "posts": Post.objects.filter(poster=poster)
+        "posts": Post.objects.filter(poster=poster),
+        "posts_count": Post.objects.filter(poster=poster).count(),
+        "poster": poster,
+        "followers": poster.followers,
+        "following": poster.following,
+        "followers_count": poster.followers.count(),
+        "followee_count": poster.following.count()
     })
 
 
+def user_profile(request):
+    """
+    Load the current user's profile page
+    """
+
+    if (str(request.user) == "AnonymousUser"):
+        return HttpResponseRedirect(reverse("login"))
+
+    else:
+        return HttpResponseRedirect(reverse("profile", args=(request.user.id,)))
+
+
+def login_view(request):
+    if request.method == "POST":
+
+        # Attempt to sign user in
+        username = request.POST["username"]
+        password = request.POST["password"]
+        user = authenticate(request, username=username, password=password)
+
+        # Check if authentication successful
+        if user is not None:
+            login(request, user)
+            return HttpResponseRedirect(reverse("index"))
+        else:
+            return render(request, "network/login.html", {
+                "message": "Invalid username and/or password."
+            })
+    else:
+        return render(request, "network/login.html")
+
+
+def logout_view(request):
+    logout(request)
+    return HttpResponseRedirect(reverse("index"))
+
+
+def register(request):
+    if request.method == "POST":
+        username = request.POST["username"]
+        email = request.POST["email"]
+        password = request.POST["password"]
+        confirmation = request.POST["confirmation"]
+
+        user = User.objects.create_user(username, email, password)
+
+        # Ensure password is valid
+        if not user.is_password_valid():
+            return render(request, "network/register.html", {
+                "message": "Password must be at least 8 characters long, contain one uppercase, one lower case, one digit"
+            })
+
+        # Ensure password matches confirmation
+        elif not user.do_passwords_match:
+            return render(request, "network/register.html", {
+                "message": "Passwords must match."
+            })
+            
+
+        # Attempt to create new user
+        try:
+            # user = User.objects.create_user(username, email, password)
+            user.save()
+        except IntegrityError:
+            return render(request, "network/register.html", {
+                "message": "Username already taken."
+            })
+        login(request, user)
+        return HttpResponseRedirect(reverse("index"))
+    else:
+        return render(request, "network/register.html")
+
+
+# API Views
 @csrf_exempt
 def like(request):
     """
@@ -109,7 +189,7 @@ def like(request):
 @csrf_exempt
 def like_count(request):
     """
-    Get the number of likes a post have
+    Gets the number of likes a post have
     """
 
     data = JSONParser().parse(request)
@@ -118,62 +198,32 @@ def like_count(request):
     return JsonResponse(serializer.data, safe=False)
 
 
-def login_view(request):
-    if request.method == "POST":
+@csrf_exempt
+def change_password(request):
+    """
+    Change the password of a user
+    """
 
-        # Attempt to sign user in
-        username = request.POST["username"]
-        password = request.POST["password"]
-        user = authenticate(request, username=username, password=password)
+    try:
+        user = User.objects.get(pk=request.user.id)
+    except User.DoesNotExist:
+        raise Http404("This user does not exist")
 
-        # Check if authentication successful
-        if user is not None:
-            login(request, user)
-            return HttpResponseRedirect(reverse("index"))
-        else:
-            return render(request, "network/login.html", {
-                "message": "Invalid username and/or password."
-            })
-    else:
-        return render(request, "network/login.html")
+    data = JSONParser().parse(request)
 
+    if data.get("prev_pwd") is not None:
+        if data["prev_pwd"] is not user.password:
+            return JsonResponse({"message": "Old password is wrong"}, status=201)
 
-def logout_view(request):
-    logout(request)
-    return HttpResponseRedirect(reverse("index"))
+    elif data.get("confirm_pwd") is not None:
+        if not user.do_passwords_match(data["confirm_pwd"]):
+            return JsonResponse({"message": "New passwords don't match"}, status=201)
 
+    elif data.get("new_pwd") is not None:
+        if not user.is_password_valid(data["new_pwd"]):
+            return JsonResponse({"message": "Password must be at least 8 characters long, contain one uppercase, one lower case, one digit"}, status=201)
 
-def register(request):
-    if request.method == "POST":
-        username = request.POST["username"]
-        email = request.POST["email"]
-        password = request.POST["password"]
-        confirmation = request.POST["confirmation"]
-
-        user = User.objects.create_user(username, email, password)
-
-        # Ensure password is valid
-        if not user.is_password_valid():
-            return render(request, "network/register.html", {
-                "message": "Password must be at least 8 characters long, contain one uppercase, one lower case, one digit"
-            })
-
-        # Ensure password matches confirmation
-        elif not user.do_passwords_match:
-            return render(request, "network/register.html", {
-                "message": "Passwords must match."
-            })
-            
-
-        # Attempt to create new user
-        try:
-            # user = User.objects.create_user(username, email, password)
-            user.save()
-        except IntegrityError:
-            return render(request, "network/register.html", {
-                "message": "Username already taken."
-            })
-        login(request, user)
-        return HttpResponseRedirect(reverse("index"))
-    else:
-        return render(request, "network/register.html")
+    if data.get("new_pwd") is not None:
+        user.password = data["new_pwd"]
+        user.save()
+        return JsonResponse({"message": "Successful"}, status=201)

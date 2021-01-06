@@ -46,7 +46,9 @@
             </a>
 
             <div class="edit-timestamp">
-                <span style="margin-right: 5px;"><a href="#">Edit</a></span>
+                {% if user == post.poster %}
+                    <span style="margin-right: 5px;"><a href="#">Edit</a></span>
+                {% endif %}
                 <span>{{ post.timestamp }}</span>
             </div>
 
