@@ -2,12 +2,20 @@
 
 {% load static %}
 
+{% block styles %}
+    <link href="{% static 'network/styles/styles.css' %}" rel="stylesheet">
+    <link href="{% static 'network/styles/logo.css' %}" rel="stylesheet">
+    <link href="{% static 'network/styles/nav.css' %}" rel="stylesheet">
+{% endblock %}
+
 {% block scripts %}
     <script src="{% static 'network/scripts/like.js' %}"></script>
     <script src="{% static 'network/scripts/main.js' %}"></script>
 {% endblock %}
 
 {% block body %}
+    {% include "network/nav.html" %}
+
     {% if user.is_authenticated %}
         <h2>Create a post</h2>
 

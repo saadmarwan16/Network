@@ -1,7 +1,34 @@
 {% extends "network/layout.html" %}
 
+{% load static %}
+
+{% block styles %}
+    <link href="{% static 'network/styles/logo.css' %}" rel="stylesheet">
+    <link href="{% static 'network/styles/profile.css' %}" rel="stylesheet">
+{% endblock %}
+
 {% block body %}
-    <h2>All posts</h2>
+    <div class="container-fluid">
+        <div class="row user-profile">
+            <img style="width: 100%; height: 40vh" src="{% static 'network/images/default-cover-photo.jpg' %}">
+        </div>
+        <div class="row single-profile-row">
+            <div class="col-3 single-profile">
+                <div class="jumbotron single-profile-jumb">Profile</div>
+            </div>
+            <div class="col-3 followers">
+                <div class="jumbotron followers-jumb">Followers</div>
+            </div>
+            <div class="col-3 following">
+                <div class="jumbotron following-jumb">Following</div>
+            </div>
+            <div class="col-3 posts">
+                <div class="jumbotron posts-jumb">Posts</div>
+            </div>
+        </div>
+    </div>
+
+    <h2>Posts</h2>
     {% for post in posts %}
         <div class="jumbotron all-posts-jumbotron" id="{{ post.id }}">
             <a title="My profile" href="#" class="poster-container">
