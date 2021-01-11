@@ -10,6 +10,7 @@ urlpatterns = [
     path("new-post", views.new_post, name="new_post"),
     path("profile/<int:poster_id>", views.profile, name="profile"),
     path("user-profile", views.user_profile, name="user_profile"),
+    path("following", views.following, name="following"),
 
     # API routes
     path("like", views.like, name="like"),

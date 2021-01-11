@@ -1,7 +1,7 @@
 from django.db.models import Max
 from django.test import Client, TestCase
 
-from .models import User, Post, Follow, Like, Comment
+from .models import User, Post, Follow, Like
 
 # Create your tests here.
 class ModelsTestCase(TestCase):

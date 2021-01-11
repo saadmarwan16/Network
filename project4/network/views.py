@@ -6,8 +6,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import User, Post, Follow, Like, Comment
-from .serializers import PostSerializer, LikeSerializer, CommentSerializer
+from .models import User, Post, Follow, Like
+from .serializers import PostSerializer, LikeSerializer
 
 
 def index(request):
@@ -124,6 +124,18 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "network/register.html")
+
+
+def following(request):
+    user = User.objects.get(pk=request.user.id)
+    print(user)
+    print(user.followers.all())
+    following = User.objects.filter(pk__in=user.followers.all())
+    print(following)
+
+    return render(request, "network/following.html", {
+        "posts": Post.objects.filter(poster__in=following).order_by("-timestamp")
+    })
 
 
 # API Views

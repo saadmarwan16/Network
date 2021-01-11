@@ -7,17 +7,14 @@
 
         <link href="{% static 'network/logo/favicon.ico' %}" rel="icon">
 
-        <!-- <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-        <link rel="manifest" href="/site.webmanifest"> -->
-
         <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
         <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
-        {% block styles %}
-        {% endblock %}
+        <link href="{% static 'network/styles/styles.css' %}" rel="stylesheet">
+        <link href="{% static 'network/styles/logo.css' %}" rel="stylesheet">
+        <link href="{% static 'network/styles/nav.css' %}" rel="stylesheet">
+        <link href="{% static 'network/styles/profile.css' %}" rel="stylesheet">
     </head>
     <body>
 
@@ -47,6 +44,36 @@
                 {% endif %}
             </div>
         </div>
+
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark" style="position: sticky; top: 0; z-index: 1;">
+            <div style="width: 100%">
+                <ul class="navbar-nav mr-auto" style="display: inline-block;">
+                    <li class="nav-item posts">
+                        <a class="nav-link" href="{% url 'index' %}">All Posts</a>
+                    </li>
+                    {% if user.is_authenticated %}
+                        <li class="nav-item following">
+                            <a class="nav-link" href="{% url 'following' %}">Following</a>
+                        </li>
+                    {% endif %}
+                </ul>
+        
+                <ul class="navbar-nav mr-auto" style="display: block; float: right;">
+                    {% if user.is_authenticated %}
+                        <li class="nav-item logout">
+                            <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item login">
+                            <a class="nav-link" href="{% url 'login' %}">Log In</a>
+                        </li>
+                        <li class="nav-item register">
+                            <a class="nav-link" href="{% url 'register' %}">Register</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </nav>
 
         <div class="body">
             {% block body %}

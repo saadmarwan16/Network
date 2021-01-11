@@ -8,29 +8,6 @@
 {% endblock %}
 
 {% block body %}
-
-    {% if user.is_authenticated %}
-        <h2>Create a post</h2>
-
-        {% if message %}
-            <div>{{ message }}</div>
-        {% endif %}
-
-        <div class="jumbotron new-post-jumbotron">
-            <h4>New post</h4>
-            <form action="{% url 'new_post' %}" method="post">
-                {% csrf_token %}
-
-                <div class="form-group">
-                    <label for="post" style="font-weight: bold;">What's on your mind?</label>
-                    <textarea name="content" maxlength="2560" class="form-control" rows="3" id="post"></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary">Post</button>
-            </form>
-        </div>
-    {% endif %}
-
-    <h2>All posts</h2>
     {% for post in posts %}
         <div class="jumbotron all-posts-jumbotron" id="{{ post.id }}">
             <a title="View user's profile" href="{% url 'profile' post.poster.id %}" class="poster-container">

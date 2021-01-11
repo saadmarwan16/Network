@@ -15,41 +15,17 @@
 
 {% block body %}
     <div class="container-fluid">
-        <div class="row user-profile">
-            <img class="cover-picture" src="{% static 'network/images/default-cover-photo.jpg' %}">
-            <!-- <div>
-                <img class="profile-picture" src="{% static 'network/images/default-profile-picture.jpg' %}">
-            </div> -->
+        <div class="row single-profile-row">
+            <div class="col-4 posts">
+                <div class="jumbotron posts-jumb" id="single-posts">Posts</div>
+            </div>
+            <div class="col-4 followers">
+                <div class="jumbotron followers-jumb" id="single-followers">Followers</div>
+            </div>
+            <div class="col-4 following">
+                <div class="jumbotron following-jumb" id="single-following">Following</div>
+            </div>
         </div>
-
-        {% if poster.id == user.id %}
-            <div class="row single-profile-row">
-                <div class="col-2 posts">
-                    <div class="jumbotron posts-jumb" id="single-posts">Posts</div>
-                </div>
-                <div class="col-2 single-profile">
-                    <div class="jumbotron single-profile-jumb" id="single-profile">Profile</div>
-                </div>
-                <div class="col-4 followers">
-                    <div class="jumbotron followers-jumb" id="single-followers">Followers</div>
-                </div>
-                <div class="col-4 following">
-                    <div class="jumbotron following-jumb" id="single-following">Following</div>
-                </div>
-            </div>
-        {% else %}
-            <div class="row single-profile-row">
-                <div class="col-2 posts">
-                    <div class="jumbotron posts-jumb" id="single-posts">Posts</div>
-                </div>
-                <div class="col-5 followers">
-                    <div class="jumbotron followers-jumb" id="single-followers">Followers</div>
-                </div>
-                <div class="col-5 following">
-                    <div class="jumbotron following-jumb" id="single-following">Following</div>
-                </div>
-            </div>
-        {% endif %}
     </div>
 
     <div id="posts-view">
@@ -90,8 +66,6 @@
                             </span>
                             <span class="num-of-likes" id="num-like{{ post.id }}"></span>
                         </span>
-                        <!-- <span class="like-status" id="like{{ post.id }}"></span> -->
-                        <!-- <span class="num-of-likes" id="num-like{{ post.id }}"></span> -->
                     </span>
                     <span class="comments">
                         <a href="#"><i class="material-icons comment">comment</i></a>
@@ -105,8 +79,7 @@
     <div class="container-fluid">
         <div class="row" id="profile-view">
             <div class="col-12">
-                <h3>Change Password</h3>
-                <p style="margin-bottom: 25px;"><strong>You can change your password but first enter your old passowrd</strong></p>
+                <h3 class="change-pwd-heading">Change Password</h3>
 
                 <form method="post">
                     {% csrf_token %}
@@ -122,6 +95,15 @@
                     <div class="form-group">
                         <label for="confirm-pwd">Enter new password:</label>
                         <input type="password" class="form-control" id="confirm-pwd" placeholder="Enter password again" name="confirm-pwd">
+                    </div>
+                    <div class="form-group">
+                        <div class="jumbotron change-pwd-jumb">
+                            <div id="8-char"><span>&times;</span>Passowrd contains at least 8 character</div>
+                            <div id="upper-case"><span>&check;</span>Password contains at least one upper case</div>
+                            <div id="lower-case">Password contains at least one lower case</div>
+                            <div id="one-digit">Password contains at least one digit</div>
+                            <div class="pwd-match-times pwd-match-check" id="pwd-match"><span>&check;</span><span>&times;</span>New passwords match</div>
+                        </div>
                     </div>
                     <button id="change-pwd-btn" type="submit" class="btn btn-primary">Submit</button>
                 </form>
@@ -147,10 +129,6 @@
                     <button class="btn btn-primary btn-primary-sm">Follow +</button>
                 </div>
             {% endif %}
-        </div>
-
-        <div class="row jumbotron" id="successful-view">
-            <span class="password-changed">Password successfully changed</span>
         </div>
     </div>
 {% endblock %}
