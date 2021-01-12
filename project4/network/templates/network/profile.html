@@ -9,27 +9,27 @@
 
 {% block scripts %}
     <script src="{% static 'network/scripts/profile.js' %}"></script>
-    <script src="{% static 'network/scripts/like.js' %}"></script>
-    <script src="{% static 'network/scripts/main.js' %}"></script>
+    <!-- <script src="{% static 'network/scripts/like.js' %}"></script> -->
+    <!-- <script src="{% static 'network/scripts/main.js' %}"></script> -->
 {% endblock %}
 
 {% block body %}
     <div class="container-fluid">
         <div class="row single-profile-row">
             <div class="col-4 posts">
-                <div class="jumbotron posts-jumb" id="single-posts">Posts<small class="profile-num">20</small></div>
+                <div class="jumbotron posts-jumb" id="single-posts">Posts<small class="profile-num">{{ posts_count }}</small></div>
             </div>
             <div class="col-4 followers">
-                <div class="jumbotron followers-jumb" id="single-followers">Followers<small class="profile-num">20</small></div>
+                <div class="jumbotron followers-jumb" id="single-followers">Followers<small class="profile-num">{{ followers_count }}</small></div>
             </div>
             <div class="col-4 following">
-                <div class="jumbotron following-jumb" id="single-following">Following<small class="profile-num">20</small></div>
+                <div class="jumbotron following-jumb" id="single-following">Following<small class="profile-num">{{ followee_count }}</small></div>
             </div>
         </div>
     </div>
 
     <div id="posts-view">
-        <h3 style="padding: 15px;">Posts</h3>
+        <h3 class="single-heading">Posts</h3>
 
         {% for post in posts %}
             <div class="jumbotron all-posts-jumbotron" id="{{ post.id }}">
@@ -71,7 +71,7 @@
     </div>
 
     <div class="container-fluid">
-        <div class="row" id="profile-view">
+        <!-- <div class="row" id="profile-view">
             <div class="col-12">
                 <h3 class="change-pwd-heading">Change Password</h3>
 
@@ -102,21 +102,68 @@
                     <button id="change-pwd-btn" type="submit" class="btn btn-primary">Submit</button>
                 </form>
             </div>
-        </div>
+        </div> -->
 
         <div class="row" id="followers-view">
             {% if poster.id != user.id %}
                 <div class="follow">
-                    <button class="btn btn-primary btn-primary-sm">Follow this user +</button>
+                    <button class="btn btn-primary btn-primary-sm">Follow {{ poster.username }} +</button>
                 </div>
             {% endif %}
+
+            <h3 class="single-heading">Followers</h3>
+
+            {% for follower in followers %}
+                <div class="jumbotron all-posts-jumbotron" id="{{ post.id }}">
+                    <a title="View user's profile" href="{% url 'profile' follower.id %}" class="poster-container">
+                        <i class="material-icons poster-image">person</i>
+                        <span class="poster">{{ follower.username }}</span>
+                    </a>
+
+                    <div class="jumbotron content">
+                        <span>Data joined: {{follower.date_joined }}</span>
+                    </div>
+
+                    <div class="jumbotron content">
+                        <span>Last login: {{follower.last_login }}</span>
+                    </div>
+
+                    {% if follower.id != user.id %}
+                        <div><button class="btn btn-primary">Follow +</button></div>
+                    {% endif %}
+                </div>
+            {% endfor %}
         </div>
+        
         <div class="row" id="following-view">
             {% if poster.id != user.id %}
                 <div class="follow">
-                    <button class="btn btn-primary btn-primary-sm">Follow this user +</button>
+                    <button class="btn btn-primary btn-primary-sm">Follow {{ poster.username }} +</button>
                 </div>
             {% endif %}
+
+            <h3 class="single-heading">Following</h3>
+
+            {% for following in followings %}
+                <div class="jumbotron all-posts-jumbotron" id="{{ post.id }}">
+                    <a title="View user's profile" href="{% url 'profile' following.id %}" class="poster-container">
+                        <i class="material-icons poster-image">person</i>
+                        <span class="poster">{{ following.username }}</span>
+                    </a>
+
+                    <div class="jumbotron content">
+                        <span>Data joined: {{ following.date_joined }}</span>
+                    </div>
+
+                    <div class="jumbotron content">
+                        <span>Last login: {{ following.last_login }}</span>
+                    </div>
+
+                    {% if following.id != poster.id %}
+                        <div><button class="btn btn-primary">Follow +</button></div>
+                    {% endif %}
+                </div>
+            {% endfor %}
         </div>
     </div>
 {% endblock %}

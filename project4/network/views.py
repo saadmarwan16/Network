@@ -48,14 +48,16 @@ def profile(request, poster_id):
     except User.DoesNotExist:
         raise Http404("This user does not exist")
 
+    print(poster.followers.all())
+
     return render(request, "network/profile.html", {
         "posts": Post.objects.filter(poster=poster),
-        "posts_count": Post.objects.filter(poster=poster).count(),
         "poster": poster,
-        "followers": poster.followers,
-        "following": poster.following,
-        "followers_count": poster.followers.count(),
-        "followee_count": poster.following.count()
+        "followings": User.objects.filter(pk__in=poster.following.exclude(pk=poster_id)),
+        "followers": User.objects.filter(pk__in=poster.followers.exclude(pk=poster_id)),
+        "posts_count": Post.objects.filter(poster=poster).count(),
+        "followers_count": poster.followers.exclude(pk=poster_id).count(),
+        "followee_count": poster.following.exclude(pk=poster_id).count()
     })
 
 
@@ -134,10 +136,7 @@ def register(request):
 
 def following(request):
     user = User.objects.get(pk=request.user.id)
-    print(user)
-    print(user.followers.all())
     following = User.objects.filter(pk__in=user.followers.all())
-    print(following)
 
     return render(request, "network/following.html", {
         "posts": Post.objects.filter(poster__in=following).order_by("-timestamp")

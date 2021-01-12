@@ -28,9 +28,14 @@
     font-size: 18px;
 }
 
-.follow {
+/* .follow {
     font-weight: bold;
     font-size: 20px;
+} */
+
+.follow, .single-heading {
+    /* display: flex; */
+    margin: 15px 25px;
 }
 
 .profile-num {
