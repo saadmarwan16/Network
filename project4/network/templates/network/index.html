@@ -22,7 +22,7 @@
                 {% csrf_token %}
 
                 <div class="form-group">
-                    <label for="post" style="font-weight: bold;">What's on your mind?</label>
+                    <label for="post" style="font-weight: bold;">What's on your mind {{ user.username }}?</label>
                     <textarea name="content" maxlength="2560" class="form-control" rows="3" id="post"></textarea>
                 </div>
                 <button type="submit" class="btn btn-primary">Post</button>
