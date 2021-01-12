@@ -1,0 +1,19 @@
+name: Network CI
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  test_network:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install Dependencies
+      run: |
+        pip install -r requirements.txt
+    - name: Run Tests
+      run: |
+        python manage.py test
