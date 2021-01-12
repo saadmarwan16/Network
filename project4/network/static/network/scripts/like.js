@@ -100,25 +100,6 @@ function isLiked(post) {
             })
         }
     })
-
-    likeCount(post);
-}
-
-function likeCount(post) {
-
-    // Send a POST request to know how many likes this post has
-    fetch('/like-count', {
-        method: 'POST',
-        body: JSON.stringify({
-            post_id: post.id
-        })
-    })
-    .then(response => response.json())
-    .then(result => {
-
-        // Set the number of likes on the client side
-        document.querySelector(`#num-like${post.id}`).innerText = result.num_of_likes;
-    })
 }
 
 function hideNoLike(post) {

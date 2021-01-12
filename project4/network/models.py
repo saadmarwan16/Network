@@ -51,6 +51,7 @@ class Like(models.Model):
 
 
 class Follow(models.Model):
+    is_following = models.BooleanField()
     followee = models.ForeignKey(User, on_delete=models.CASCADE, related_name="followers")
     follower = models.ForeignKey(User, on_delete=models.CASCADE, related_name="following")
 

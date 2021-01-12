@@ -27,4 +27,46 @@ document.addEventListener('DOMContentLoaded', () => {
             followingView.style.display = 'block';
         }
     })
+
+    document.querySelectorAll('.follow-btn').forEach(button => {
+        button.addEventListener('click', event => {
+            event.preventDefault();
+            const follow = button.parentElement;
+
+            fetch('/follow', {
+                method: 'PUT',
+                body: JSON.stringify({
+                    followee: follow.querySelector('.followee').value
+                })
+            })
+            .then(response => response.json())
+            .then(results => {
+                if (results.message === 'Successful') {
+                    button.style.display = 'none'
+                    follow.querySelector('.unfollow-btn').style.display = 'inline-block';
+                }
+            })
+        })
+    })
+
+    document.querySelectorAll('.unfollow-btn').forEach(button => {
+        button.addEventListener('click', event => {
+            event.preventDefault();
+            const follow = button.parentElement;
+
+            fetch('/unfollow', {
+                method: 'PUT',
+                body: JSON.stringify({
+                    followee: follow.querySelector('.followee').value
+                })
+            })
+            .then(response => response.json())
+            .then(results => {
+                if (results.message === 'Successful') {
+                    button.style.display = 'none';
+                    follow.querySelector('.follow-btn').style.display = 'inline-block';
+                }
+            })
+        })
+    })
 })

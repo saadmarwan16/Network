@@ -31,7 +31,7 @@
     <div id="posts-view">
         <h3 class="single-heading">Posts</h3>
 
-        {% for post in posts %}
+        {% for post in page_object %}
             <div class="jumbotron all-posts-jumbotron" id="{{ post.id }}">
                 <a title="My profile" href="#" class="poster-container">
                     <i class="material-icons poster-image">person</i>
@@ -58,56 +58,63 @@
                                     <i class="material-icons liked" title="Unlike">favorite</i>
                                 </a>
                             </span>
-                            <span class="num-of-likes" id="num-like{{ post.id }}"></span>
+                            <span class="num-of-likes" id="num-like{{ post.id }}">{{ post.num_of_likes }}</span>
                         </span>
                     </span>
-                    <span class="comments">
-                        <a href="#"><i class="material-icons comment">comment</i></a>
-                        <span>{{ post.num_of_comments }}</span>
-                    </span>
+                    <span class="no-like" id="no-like{{ post.id }}">Login or Sign up to like post</span>
                 </div>
             </div>
         {% endfor %}
+
+        <nav aria-label="All posts">
+            <ul class="pagination justify-content-center">
+                {% if page_object.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1">&laquo; First</a>
+                        <a class="page-link" href="?page={{ page_object.previous_page_number }}">Previous</a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled">
+                        <a class="page-link" tabindex="-1" aria-disabled="true">Previous</a>
+                    </li>
+                {% endif %}
+    
+                <li class="page-item current-item">
+                    <span class="current">
+                        Page {{ page_object.number }} of {{ page_object.paginator.num_pages }}
+                    </span>
+                </li>
+    
+                {% if page_object.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_object.next_page_number }}">Next</a>
+                        <a class="page-link" href="?page={{ page_object.paginator.num_pages }}">Last &raquo;</a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled">
+                        <a class="page-link" tabindex="-1" aria-disabled="true">Next</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
     </div>
 
     <div class="container-fluid">
-        <!-- <div class="row" id="profile-view">
-            <div class="col-12">
-                <h3 class="change-pwd-heading">Change Password</h3>
-
-                <form method="post">
-                    {% csrf_token %}
-
-                    <div class="form-group">
-                        <label for="prev-pwd">Previous password:</label>
-                        <input type="text" class="form-control" id="prev-pwd" placeholder="Enter previous password" name="prev-pwd">
-                    </div>
-                    <div class="form-group">
-                        <label for="new-pwd">New password:</label>
-                        <input type="password" class="form-control" id="new-pwd" placeholder="Enter password" name="new-pwd">
-                    </div>
-                    <div class="form-group">
-                        <label for="confirm-pwd">Enter new password:</label>
-                        <input type="password" class="form-control" id="confirm-pwd" placeholder="Enter password again" name="confirm-pwd">
-                    </div>
-                    <div class="form-group">
-                        <div class="jumbotron change-pwd-jumb">
-                            <div id="8-char"><span>&times;</span>Passowrd contains at least 8 character</div>
-                            <div id="upper-case"><span>&check;</span>Password contains at least one upper case</div>
-                            <div id="lower-case">Password contains at least one lower case</div>
-                            <div id="one-digit">Password contains at least one digit</div>
-                            <div class="pwd-match-times pwd-match-check" id="pwd-match"><span>&check;</span><span>&times;</span>New passwords match</div>
-                        </div>
-                    </div>
-                    <button id="change-pwd-btn" type="submit" class="btn btn-primary">Submit</button>
-                </form>
-            </div>
-        </div> -->
-
         <div class="row" id="followers-view">
             {% if poster.id != user.id %}
                 <div class="follow">
-                    <button class="btn btn-primary btn-primary-sm">Follow {{ poster.username }} +</button>
+                    <form method="post">
+                        {% csrf_token %}
+
+                        <input class="followee" type="hidden" value="{{ poster.id }}">
+                        {% if is_following %}
+                            <button style="display: none;" class="btn btn-primary btn-primary-sm follow-btn">Follow {{ poster.username }} +</button>
+                            <button class="btn btn-primary btn-primary-sm unfollow-btn">Unfollow {{ poster.username }} +</button>
+                        {% else %}
+                            <button style="display: none;" class="btn btn-primary btn-primary-sm unfollow-btn">Unfollow {{ poster.username }} +</button>
+                            <button class="btn btn-primary btn-primary-sm follow-btn">Follow {{ poster.username }} +</button>
+                        {% endif %}
+                    </form>
                 </div>
             {% endif %}
 
@@ -138,7 +145,18 @@
         <div class="row" id="following-view">
             {% if poster.id != user.id %}
                 <div class="follow">
-                    <button class="btn btn-primary btn-primary-sm">Follow {{ poster.username }} +</button>
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <input class="followee" type="hidden" value="{{ poster.id }}">
+                        {% if is_following %}
+                            <button style="display: none;" class="btn btn-primary btn-primary-sm follow-btn">Follow {{ poster.username }} +</button>
+                            <button class="btn btn-primary btn-primary-sm unfollow-btn">Unfollow {{ poster.username }} +</button>
+                        {% else %}
+                            <button style="display: none;" class="btn btn-primary btn-primary-sm unfollow-btn">Unfollow {{ poster.username }} +</button>
+                            <button class="btn btn-primary btn-primary-sm follow-btn">Follow {{ poster.username }} +</button>
+                        {% endif %}
+                    </form>
                 </div>
             {% endif %}
 

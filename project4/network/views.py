@@ -20,9 +20,22 @@ def index(request):
     paginator = Paginator(object_list=posts, per_page=2, allow_empty_first_page=True)
     page_number = request.GET.get('page')
     page_object = paginator.get_page(number=page_number)
+    likes = list()
+
+    if str(request.user) != "AnonymousUser":
+        for post in page_object:
+            # Return whether user have liked post or not
+            try:
+                like = Like.objects.get(post=post, user=request.user)
+                likes.append(like.is_liked)
+
+            # If user have never liked or unliked a post set it to not liked
+            except Like.DoesNotExist:
+                likes.append(False)
 
     return render(request, "network/index.html", {
-        "page_object": page_object
+        "page_object": page_object,
+        "likes": likes
     })
 
 
@@ -48,14 +61,32 @@ def profile(request, poster_id):
     except User.DoesNotExist:
         raise Http404("This user does not exist")
 
+    # try:
+    #     follow = Follow.objects.get(is_following=True, followee=data["followee"], follower=request.user)
+    #     return JsonResponse({"message": True}, status=201)
+    # except Follow.DoesNotExist:
+    #     return JsonResponse({"message": False}, status=201)
+    
+    try:
+        Follow.objects.get(is_following=True, followee=poster, follower=request.user)
+        is_following = True
+    except Follow.DoesNotExist:
+        is_following = False
+
+    posts = Post.objects.filter(poster=poster).order_by("-timestamp")
+    paginator = Paginator(object_list=posts, per_page=2, allow_empty_first_page=True)
+    page_number = request.GET.get('page')
+    page_object = paginator.get_page(number=page_number)
+
     return render(request, "network/profile.html", {
-        "posts": Post.objects.filter(poster=poster),
+        "page_object": page_object,
         "poster": poster,
         "followings": User.objects.filter(pk__in=poster.following.exclude(pk=poster_id)),
         "followers": User.objects.filter(pk__in=poster.followers.exclude(pk=poster_id)),
         "posts_count": Post.objects.filter(poster=poster).count(),
         "followers_count": poster.followers.exclude(pk=poster_id).count(),
-        "followee_count": poster.following.exclude(pk=poster_id).count()
+        "followee_count": poster.following.exclude(pk=poster_id).count(),
+        "is_following": is_following
     })
 
 
@@ -268,3 +299,36 @@ def edit_post(request):
         post.content = data["post_content"]
         post.save()
         return JsonResponse({"message": "Successful"}, status=201)
+
+
+@csrf_exempt
+def follow(request):
+    """
+    Allow users to follow other users
+    """
+
+    data = JSONParser().parse(request)
+
+    try:
+        follow = Follow.objects.get(is_following=False, followee=data["followee"], follower=request.user)
+        follow.is_following = True
+        follow.save()
+        return JsonResponse({"message": "Successful"}, status=201)
+    except Follow.DoesNotExist:
+        Follow.objects.create(is_following=True, followee=data["followee"], follower=request.user)
+        return JsonResponse({"message": "Successful"}, status=201)
+
+
+@csrf_exempt
+def unfollow(request):
+    """
+    Allow users to unfollow users they are already following
+    """
+
+    data = JSONParser().parse(request)
+    follow = Follow.objects.get(is_following=True, followee=data["followee"], follower=request.user)
+    follow.is_following = False
+    follow.save()
+
+    return JsonResponse({"message": "Successful"}, status=201)
+    
