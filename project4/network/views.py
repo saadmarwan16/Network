@@ -246,3 +246,25 @@ def change_password(request):
         user.password = data["new_pwd"]
         user.save()
         return JsonResponse({"message": "Successful"}, status=201)
+
+
+@csrf_exempt
+def edit_post(request):
+    """
+    Allows users to edit existing posts they have made
+    """
+
+    data = JSONParser().parse(request)
+
+    try:
+        post = Post.objects.get(pk=data["post_id"])
+    except Post.DoesNotExist:
+        raise Http404("This post does not exist")
+
+    if data.get("post_content") is not None:
+        if len(data["post_content"]) == 0:
+            return JsonResponse({"message": "Post must contain at least one character"}, status=201)
+
+        post.content = data["post_content"]
+        post.save()
+        return JsonResponse({"message": "Successful"}, status=201)

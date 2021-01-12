@@ -73,7 +73,7 @@ class ModelsTestCase(TestCase):
         c = Client()
         response = c.get("/")
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.context["posts"].count(), 4)
+        self.assertEqual(response.context["page_object"].count(), 4)
 
     def test_valid_profile_page(self):
         user = User.objects.get(username="foo")

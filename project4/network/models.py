@@ -23,7 +23,6 @@ class Post(models.Model):
     content = models.CharField(max_length=2560)
     timestamp = models.DateTimeField(auto_now_add=True)
     num_of_likes = models.PositiveIntegerField(default=0)
-    num_of_comments = models.PositiveIntegerField(default=0)
     poster = models.ForeignKey(User, on_delete=models.CASCADE, related_name="posts")
 
     def __str__(self):

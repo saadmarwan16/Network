@@ -12,18 +12,15 @@
     {% if user.is_authenticated %}
         <h2>Create a post</h2>
 
-        <!-- {% if message %}
-            <div>{{ message }}</div>
-        {% endif %} -->
-
         <div class="jumbotron new-post-jumbotron">
             <h4>New post</h4>
+
             <form action="{% url 'new_post' %}" method="post">
                 {% csrf_token %}
 
                 <div class="form-group">
                     <label for="post" style="font-weight: bold;">What's on your mind {{ user.username }}?</label>
-                    <textarea name="content" maxlength="2560" class="form-control" rows="3" id="post"></textarea>
+                    <textarea name="content" required maxlength="2560" class="form-control" rows="3" id="post"></textarea>
                 </div>
                 <button type="submit" class="btn btn-primary">Post</button>
             </form>
@@ -40,7 +37,7 @@
 
             <div class="edit-timestamp">
                 {% if user == post.poster %}
-                    <span style="margin-right: 5px;"><a id="edit">Edit</a></span>
+                    <span style="margin-right: 5px;"><a class="edit-link">Edit</a></span>
                 {% endif %}
                 <span>{{ post.timestamp }}</span>
             </div>
@@ -61,7 +58,22 @@
                 </span>
                 <span class="no-like" id="no-like{{ post.id }}">Login or Sign up to like post</span>
             </div>
+
+            <div class="jumbotron edit-post-jumbotron alert-dismissible">
+                <button type="button" class="close cancel-btn">&times;</button>
+                <h4>Edit post</h4>
+                <div class="no-edit"></div>
+                <form class="edit-form" method="post">
+                    {% csrf_token %}
+        
+                    <div class="form-group">
+                        <textarea name="content" maxlength="2560" class="form-control post" rows="3">{{ post.content }}</textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary save-btn">Save</button>
+                </form>
+            </div>
         </div>
+
     {% endfor %}
 
     <nav aria-label="All posts">
