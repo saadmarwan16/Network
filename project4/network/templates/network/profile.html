@@ -17,24 +17,18 @@
     <div class="container-fluid">
         <div class="row single-profile-row">
             <div class="col-4 posts">
-                <div class="jumbotron posts-jumb" id="single-posts">Posts</div>
+                <div class="jumbotron posts-jumb" id="single-posts">Posts<small class="profile-num">20</small></div>
             </div>
             <div class="col-4 followers">
-                <div class="jumbotron followers-jumb" id="single-followers">Followers</div>
+                <div class="jumbotron followers-jumb" id="single-followers">Followers<small class="profile-num">20</small></div>
             </div>
             <div class="col-4 following">
-                <div class="jumbotron following-jumb" id="single-following">Following</div>
+                <div class="jumbotron following-jumb" id="single-following">Following<small class="profile-num">20</small></div>
             </div>
         </div>
     </div>
 
     <div id="posts-view">
-        {% if poster.id == user.id %}
-            <p>You have {{ posts_count }} posts</p>
-        {% else %}
-            <p>This user have {{ posts_count }} posts</p>
-        {% endif %}
-
         <h3 style="padding: 15px;">Posts</h3>
 
         {% for post in posts %}
@@ -111,22 +105,16 @@
         </div>
 
         <div class="row" id="followers-view">
-            {% if poster.id == user.id %}
-                <div class="follow">You have {{ followers_count }} followers</div>
-            {% else %}
+            {% if poster.id != user.id %}
                 <div class="follow">
-                    <span style="margin-right: 25px">This user have {{ followers_count }} followers</span>
-                    <button class="btn btn-primary btn-primary-sm">Follow +</button>
+                    <button class="btn btn-primary btn-primary-sm">Follow this user +</button>
                 </div>
             {% endif %}
         </div>
         <div class="row" id="following-view">
-            {% if poster.id == user.id %}
-                <div class="follow">You have {{ followee_count }} following</div>
-            {% else %}
+            {% if poster.id != user.id %}
                 <div class="follow">
-                    <span style="margin-right: 25px">This user have {{ followee_count }} following</span>
-                    <button class="btn btn-primary btn-primary-sm">Follow +</button>
+                    <button class="btn btn-primary btn-primary-sm">Follow this user +</button>
                 </div>
             {% endif %}
         </div>

@@ -11,10 +11,8 @@ h2 {
 
 .poster-container {
     display: inline-flex;
-    /* align-items: flex; */
     padding: 5px;
     height: 45px;
-    /* margin-bottom: 5px; */
 }
 
 .poster-container:hover {
@@ -74,4 +72,22 @@ h2 {
     right: 9rem;
     background: rgba(255, 0, 0, 0.3);
     color: red;
+}
+
+.current-item {
+    display: inline-flex;
+    align-items: center;
+}
+
+.current-item {
+    font-size: 18px;
+    padding: 5px;
+}
+
+.page-item {
+    display: inline-flex;
+}
+
+.page-link {
+    display: inline;
 }

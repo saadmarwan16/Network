@@ -1,9 +1,9 @@
-.posts, .following, .login, .settings, .logout, .register {
+.all-posts, .index-following, .login, .settings, .logout, .register {
     display: inline-block;
     margin: 5px;
 }
 
-.posts, .following {
+.all-posts, .index-following {
     float: left;
 }
 

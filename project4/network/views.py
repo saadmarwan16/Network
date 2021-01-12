@@ -1,6 +1,7 @@
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, Http404
+from django.core.paginator import Paginator
 from rest_framework.parsers import JSONParser
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render
@@ -15,8 +16,13 @@ def index(request):
     Load the home page
     """
 
+    posts = Post.objects.order_by("-timestamp").all()
+    paginator = Paginator(object_list=posts, per_page=2, allow_empty_first_page=True)
+    page_number = request.GET.get('page')
+    page_object = paginator.get_page(number=page_number)
+
     return render(request, "network/index.html", {
-        "posts": Post.objects.order_by("-timestamp").all()
+        "page_object": page_object
     })
 
 
