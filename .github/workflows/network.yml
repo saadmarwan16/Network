@@ -2,7 +2,7 @@ name: Network CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main/project4 ]
 
 jobs:
   test_network:
@@ -18,4 +18,4 @@ jobs:
         pip install django_restframework
     - name: Run Tests
       run: |
-        python /project4/manage.py test
+        python manage.py test
