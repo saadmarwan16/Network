@@ -1,2 +1,2 @@
-install django
-install django_restframework
+django
+django_restframework
