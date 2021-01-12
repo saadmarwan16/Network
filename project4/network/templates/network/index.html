@@ -12,9 +12,9 @@
     {% if user.is_authenticated %}
         <h2>Create a post</h2>
 
-        {% if message %}
+        <!-- {% if message %}
             <div>{{ message }}</div>
-        {% endif %}
+        {% endif %} -->
 
         <div class="jumbotron new-post-jumbotron">
             <h4>New post</h4>
@@ -40,7 +40,7 @@
 
             <div class="edit-timestamp">
                 {% if user == post.poster %}
-                    <span style="margin-right: 5px;"><a href="#">Edit</a></span>
+                    <span style="margin-right: 5px;"><a id="edit">Edit</a></span>
                 {% endif %}
                 <span>{{ post.timestamp }}</span>
             </div>
