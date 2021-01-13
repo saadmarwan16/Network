@@ -60,12 +60,6 @@ def profile(request, poster_id):
         poster = User.objects.get(pk=poster_id)
     except User.DoesNotExist:
         raise Http404("This user does not exist")
-
-    # try:
-    #     follow = Follow.objects.get(is_following=True, followee=data["followee"], follower=request.user)
-    #     return JsonResponse({"message": True}, status=201)
-    # except Follow.DoesNotExist:
-    #     return JsonResponse({"message": False}, status=201)
     
     try:
         Follow.objects.get(is_following=True, followee=poster, follower=request.user)
@@ -78,14 +72,25 @@ def profile(request, poster_id):
     page_number = request.GET.get('page')
     page_object = paginator.get_page(number=page_number)
 
+    poster_following = poster.following.filter(follower_id=poster_id, is_following=True)
+    poster_followers = poster.followers.filter(followee_id=poster_id, is_following=True)
+    followers = list()
+    followings = list()
+
+    for follower in poster_followers:
+        followers.append(User.objects.get(pk=follower.follower_id))
+
+    for following in poster_following:
+        followings.append(User.objects.get(pk=following.followee_id))
+
     return render(request, "network/profile.html", {
         "page_object": page_object,
         "poster": poster,
-        "followings": User.objects.filter(pk__in=poster.following.exclude(pk=poster_id)),
-        "followers": User.objects.filter(pk__in=poster.followers.exclude(pk=poster_id)),
+        "followings": followings,
+        "followers": followers,
         "posts_count": Post.objects.filter(poster=poster).count(),
-        "followers_count": poster.followers.exclude(pk=poster_id).count(),
-        "followee_count": poster.following.exclude(pk=poster_id).count(),
+        "followers_count": poster.followers.filter(followee_id=poster_id, is_following=True).count(),
+        "followee_count": poster.following.filter(follower_id=poster_id, is_following=True).count(),
         "is_following": is_following
     })
 
@@ -165,7 +170,7 @@ def register(request):
 
 def following(request):
     user = User.objects.get(pk=request.user.id)
-    following = User.objects.filter(pk__in=user.followers.all())
+    following = User.objects.filter(pk__in=user.following.filter(is_following=True))
     posts = Post.objects.filter(poster__in=following).order_by("-timestamp")
     paginator = Paginator(object_list=posts, per_page=2, allow_empty_first_page=True)
     page_number = request.GET.get('page')
@@ -308,14 +313,15 @@ def follow(request):
     """
 
     data = JSONParser().parse(request)
+    followee = User.objects.get(pk=data["followee"])
 
     try:
-        follow = Follow.objects.get(is_following=False, followee=data["followee"], follower=request.user)
+        follow = Follow.objects.get(is_following=False, followee=followee, follower=request.user)
         follow.is_following = True
         follow.save()
         return JsonResponse({"message": "Successful"}, status=201)
     except Follow.DoesNotExist:
-        Follow.objects.create(is_following=True, followee=data["followee"], follower=request.user)
+        Follow.objects.create(is_following=True, followee=followee, follower=request.user)
         return JsonResponse({"message": "Successful"}, status=201)
 
 
@@ -326,9 +332,9 @@ def unfollow(request):
     """
 
     data = JSONParser().parse(request)
-    follow = Follow.objects.get(is_following=True, followee=data["followee"], follower=request.user)
+    followee = User.objects.get(pk=data["followee"])
+    follow = Follow.objects.get(is_following=True, followee=followee, follower=request.user)
     follow.is_following = False
     follow.save()
 
     return JsonResponse({"message": "Successful"}, status=201)
-    
