@@ -2,7 +2,7 @@ h2 {
     padding-left: 25px;
 }
 
-.new-post-jumbotron, .edit-post-jumbotron, .all-posts-jumbotron {
+.new-post-jumbotron, .edit-post-jumbotron, .all-posts-jumbotron, .all-following-jumbotron, .all-followers-jumbotron {
     padding: 2rem;
     margin: 0px 25px 25px 25px;
     background: white;

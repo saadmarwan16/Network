@@ -9,8 +9,8 @@
 
 {% block scripts %}
     <script src="{% static 'network/scripts/profile.js' %}"></script>
-    <!-- <script src="{% static 'network/scripts/like.js' %}"></script> -->
-    <!-- <script src="{% static 'network/scripts/main.js' %}"></script> -->
+    <script src="{% static 'network/scripts/like.js' %}"></script>
+    <script src="{% static 'network/scripts/main.js' %}"></script>
 {% endblock %}
 
 {% block body %}
@@ -50,18 +50,18 @@
                 <div class="likes-comments">
                     <span class="likes">
                         <span class="likes">
-                            <span class="like-status" id="like{{ post.id }}">
-                                <a class="unlike-link" id="unlike-icon{{ post.id }}">
+                            <span class="like-status">
+                                <a class="unlike-link">
                                     <i class="material-icons unliked" title="Like">favorite_border</i>
                                 </a>
-                                <a class="like-link" id="like-icon{{ post.id }}">
+                                <a class="like-link">
                                     <i class="material-icons liked" title="Unlike">favorite</i>
                                 </a>
                             </span>
-                            <span class="num-of-likes" id="num-like{{ post.id }}">{{ post.num_of_likes }}</span>
+                            <span class="num-of-likes">{{ post.num_of_likes }}</span>
                         </span>
                     </span>
-                    <span class="no-like" id="no-like{{ post.id }}">Login or Sign up to like post</span>
+                    <span class="no-like">Login or Sign up to like post</span>
                 </div>
             </div>
         {% endfor %}
@@ -121,7 +121,7 @@
             <h3 class="single-heading">Followers</h3>
 
             {% for follower in followers %}
-                <div class="jumbotron all-posts-jumbotron" id="{{ post.id }}">
+                <div class="jumbotron all-followers-jumbotron" id="{{ post.id }}">
                     <a title="View user's profile" href="{% url 'profile' follower.id %}" class="poster-container">
                         <i class="material-icons poster-image">person</i>
                         <span class="poster">{{ follower.username }}</span>
@@ -159,7 +159,7 @@
             <h3 class="single-heading">Following</h3>
 
             {% for following in followings %}
-                <div class="jumbotron all-posts-jumbotron" id="{{ post.id }}">
+                <div class="jumbotron all-following-jumbotron" id="{{ post.id }}">
                     <a title="View user's profile" href="{% url 'profile' following.id %}" class="poster-container">
                         <i class="material-icons poster-image">person</i>
                         <span class="poster">{{ following.username }}</span>

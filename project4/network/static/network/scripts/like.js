@@ -1,7 +1,8 @@
 function isLiked(post) {
-    const statusContainer = document.querySelector(`#like${post.id}`);
-    const unLikeLink = document.querySelector(`#unlike-icon${post.id}`);
-    const likeLink = document.querySelector(`#like-icon${post.id}`);
+
+    const statusContainer = post.querySelector('.like-status');
+    const unLikeLink = post.querySelector('.unlike-link');
+    const likeLink = post.querySelector('.like-link');
 
     // Send a POST request to know whether user has liked this post
     fetch('/like', {
@@ -53,15 +54,13 @@ function isLiked(post) {
                     unLikeLink.style.display = 'block';
 
                     // Update the number of likes on the client side
-                    let numOfLikes = document.querySelector(`#num-like${post.id}`).innerText;
-                    console.log(numOfLikes)
+                    let numOfLikes = post.querySelector(`.num-of-likes`).innerText;
                     numOfLikes--;
-                    console.log(numOfLikes)
-                    document.querySelector(`#num-like${post.id}`).innerText = numOfLikes;
+                    post.querySelector(`.num-of-likes`).innerText = numOfLikes;
                 } else if (result.status === "Anonymous User") {
                     
                     // Display a must login or sign up message
-                    document.querySelector(`#no-like${post.id}`).style.display = 'inline';
+                    post.querySelector('.no-like').style.display = 'inline';
                 }
             })
         } else if (event.target.className === 'material-icons unliked') {
@@ -86,15 +85,13 @@ function isLiked(post) {
                     likeLink.style.display = 'block';
                     
                     // Update the number of likes on the client side
-                    let numOfLikes = document.querySelector(`#num-like${post.id}`).innerText;
-                    console.log(numOfLikes)
+                    let numOfLikes = post.querySelector(`.num-of-likes`).innerText;
                     numOfLikes++;
-                    console.log(numOfLikes)
-                    document.querySelector(`#num-like${post.id}`).innerText = numOfLikes;
+                    post.querySelector(`.num-of-likes`).innerText = numOfLikes;
                 } else if (result.status === "Anonymous User") {
 
                     // Display a must login or sign up message
-                    document.querySelector(`#no-like${post.id}`).style.display = 'inline';
+                    post.querySelector('.no-like').style.display = 'inline';
                     setTimeout(() => hideNoLike(post), 3000);
                 }
             })
@@ -105,5 +102,5 @@ function isLiked(post) {
 function hideNoLike(post) {
     
     // Display a must login or sign up message
-    document.querySelector(`#no-like${post.id}`).style.display = 'none';
+    post.querySelector('.no-like').style.display = 'none';
 }

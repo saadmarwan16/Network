@@ -17,7 +17,7 @@ def index(request):
     """
 
     posts = Post.objects.order_by("-timestamp").all()
-    paginator = Paginator(object_list=posts, per_page=2, allow_empty_first_page=True)
+    paginator = Paginator(object_list=posts, per_page=10, allow_empty_first_page=True)
     page_number = request.GET.get('page')
     page_object = paginator.get_page(number=page_number)
     likes = list()
@@ -68,9 +68,10 @@ def profile(request, poster_id):
         is_following = False
 
     posts = Post.objects.filter(poster=poster).order_by("-timestamp")
-    paginator = Paginator(object_list=posts, per_page=2, allow_empty_first_page=True)
+    paginator = Paginator(object_list=posts, per_page=10, allow_empty_first_page=True)
     page_number = request.GET.get('page')
     page_object = paginator.get_page(number=page_number)
+    len(page_object)
 
     poster_following = poster.following.filter(follower_id=poster_id, is_following=True)
     poster_followers = poster.followers.filter(followee_id=poster_id, is_following=True)
@@ -170,9 +171,14 @@ def register(request):
 
 def following(request):
     user = User.objects.get(pk=request.user.id)
-    following = User.objects.filter(pk__in=user.following.filter(is_following=True))
+    followings = user.following.filter(is_following=True)
+    user_followings = list()
+    for following in followings:
+        user_followings.append(following.followee_id)
+
+    following = User.objects.filter(pk__in=user_followings)
     posts = Post.objects.filter(poster__in=following).order_by("-timestamp")
-    paginator = Paginator(object_list=posts, per_page=2, allow_empty_first_page=True)
+    paginator = Paginator(object_list=posts, per_page=10, allow_empty_first_page=True)
     page_number = request.GET.get('page')
     page_object = paginator.get_page(number=page_number)
 

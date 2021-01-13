@@ -1,9 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('.all-posts-jumbotron').forEach(post => {
-        isLiked(post);
-    })
 
     document.querySelectorAll('.all-posts-jumbotron').forEach(post => {
+
+        isLiked(post);
 
         if (post.querySelector('.edit-link') !== null) {
 
